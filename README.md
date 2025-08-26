@@ -1,73 +1,194 @@
-# Welcome to your Lovable project
+# JSONPlaceholder CRUD Application
 
-## Project info
+A comprehensive React application that provides a full CRUD (Create, Read, Update, Delete) interface for the JSONPlaceholder API. Built with React, TypeScript, shadcn/ui components, and React Query.
 
-**URL**: https://lovable.dev/projects/b8aa3258-56b4-41f6-a14b-5514f8d0fc73
+## Features
 
-## How can I edit this code?
+- **Full CRUD Operations**: Create, read, update, and delete data for all JSONPlaceholder endpoints
+- **Modern UI**: Beautiful interface built with shadcn/ui components and Tailwind CSS
+- **Real-time Search**: Search functionality across all data types
+- **Responsive Design**: Works perfectly on desktop and mobile devices
+- **Type Safety**: Full TypeScript support with proper type definitions
+- **Error Handling**: Comprehensive error handling with user-friendly notifications
+- **Loading States**: Smooth loading indicators and optimistic updates
 
-There are several ways of editing your application.
+## Available Endpoints
 
-**Use Lovable**
+The application supports all JSONPlaceholder API endpoints:
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/b8aa3258-56b4-41f6-a14b-5514f8d0fc73) and start prompting.
+1. **Posts** (`/posts`) - Blog posts with title and body content
+2. **Users** (`/users`) - User profiles with contact and company information
+3. **Comments** (`/comments`) - Comments on posts with author information
+4. **Albums** (`/albums`) - Photo albums organized by users
+5. **Photos** (`/photos`) - Individual photos with URLs and thumbnails
+6. **Todos** (`/todos`) - Todo items with completion status
 
-Changes made via Lovable will be committed automatically to this repo.
+## API Operations Supported
 
-**Use your preferred IDE**
+Each endpoint supports the following operations:
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **GET** `/endpoint` - Retrieve all items
+- **GET** `/endpoint/:id` - Retrieve a specific item
+- **POST** `/endpoint` - Create a new item
+- **PUT** `/endpoint/:id` - Update an existing item
+- **DELETE** `/endpoint/:id` - Delete an item
+- **GET** `/endpoint?param=value` - Filter items by parameters
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Getting Started
 
-Follow these steps:
+### Prerequisites
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- Node.js (version 16 or higher)
+- npm or yarn
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Installation
 
-# Step 3: Install the necessary dependencies.
-npm i
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd supabase-seed-react
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start the development server:
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+4. Open your browser and navigate to `http://localhost:8081`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Usage
 
-**Use GitHub Codespaces**
+### Dashboard
+The main dashboard provides an overview of all available endpoints with:
+- Visual cards for each data type
+- Field count and descriptions
+- Direct navigation to CRUD interfaces
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### CRUD Operations
+Each endpoint page provides:
 
-## What technologies are used for this project?
+1. **View Data**: Browse all items in a responsive table
+2. **Search**: Filter items by relevant fields
+3. **Create**: Add new items with form validation
+4. **Edit**: Update existing items inline
+5. **Delete**: Remove items with confirmation dialogs
 
-This project is built with:
+### Features by Endpoint
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+#### Posts
+- Manage blog posts with title and body content
+- Search by title and body text
+- Rich text editing for post content
 
-## How can I deploy this project?
+#### Users
+- Complete user profile management
+- Contact information with clickable email and website links
+- Company and address information
 
-Simply open [Lovable](https://lovable.dev/projects/b8aa3258-56b4-41f6-a14b-5514f8d0fc73) and click on Share -> Publish.
+#### Comments
+- Comment management with post associations
+- Author information with email links
+- Search by name, email, and comment body
 
-## Can I connect a custom domain to my Lovable project?
+#### Albums
+- Photo album organization
+- User association tracking
+- Simple title-based management
 
-Yes, you can!
+#### Photos
+- Photo management with image previews
+- Album associations
+- Direct links to full-size images and thumbnails
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+#### Todos
+- Todo item management with completion status
+- Visual status indicators
+- User association tracking
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Technical Stack
+
+- **Frontend**: React 18 with TypeScript
+- **UI Components**: shadcn/ui with Radix UI primitives
+- **Styling**: Tailwind CSS
+- **State Management**: React Query (TanStack Query)
+- **Routing**: React Router DOM
+- **HTTP Client**: Native fetch API
+- **Build Tool**: Vite
+- **Icons**: Lucide React
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── ui/           # shadcn/ui components
+│   └── CrudTable.tsx # Reusable CRUD table component
+├── pages/
+│   ├── Index.tsx     # Dashboard
+│   ├── Posts.tsx     # Posts CRUD
+│   ├── Users.tsx     # Users CRUD
+│   ├── Comments.tsx  # Comments CRUD
+│   ├── Albums.tsx    # Albums CRUD
+│   ├── Photos.tsx    # Photos CRUD
+│   └── Todos.tsx     # Todos CRUD
+├── services/
+│   └── api.ts        # API service layer
+└── App.tsx           # Main application component
+```
+
+## API Service Layer
+
+The application includes a comprehensive API service layer (`src/services/api.ts`) that provides:
+
+- Type-safe interfaces for all data types
+- Generic CRUD operations
+- Specific service functions for each endpoint
+- Error handling and response validation
+
+## Development
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+### Adding New Endpoints
+
+To add support for a new endpoint:
+
+1. Define the interface in `src/services/api.ts`
+2. Create service functions for the endpoint
+3. Create a new page component using the `CrudTable` component
+4. Add the route to `src/App.tsx`
+
+## Important Notes
+
+- **Fake API**: JSONPlaceholder is a fake API - data won't be permanently saved, but the API will respond as if it was real
+- **Perfect for Learning**: This makes it ideal for learning and testing CRUD operations
+- **No Authentication**: The API doesn't require authentication
+- **Rate Limiting**: Be mindful of API rate limits in production use
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## Acknowledgments
+
+- [JSONPlaceholder](https://jsonplaceholder.typicode.com/) for providing the free fake API
+- [shadcn/ui](https://ui.shadcn.com/) for the beautiful UI components
+- [TanStack Query](https://tanstack.com/query) for the excellent data fetching library

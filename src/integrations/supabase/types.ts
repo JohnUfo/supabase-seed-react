@@ -14,38 +14,222 @@ export type Database = {
   }
   public: {
     Tables: {
-      profiles: {
+      posts: {
         Row: {
-          avatar_url: string | null
+          id: number
+          user_id: number
+          title: string
+          body: string
           created_at: string
-          full_name: string | null
-          id: string
-          phone_number: string | null
           updated_at: string
-          user_id: string
-          username: string | null
         }
         Insert: {
-          avatar_url?: string | null
+          id?: number
+          user_id: number
+          title: string
+          body: string
           created_at?: string
-          full_name?: string | null
-          id?: string
-          phone_number?: string | null
           updated_at?: string
-          user_id: string
-          username?: string | null
         }
         Update: {
-          avatar_url?: string | null
+          id?: number
+          user_id?: number
+          title?: string
+          body?: string
           created_at?: string
-          full_name?: string | null
-          id?: string
-          phone_number?: string | null
           updated_at?: string
-          user_id?: string
-          username?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      users: {
+        Row: {
+          id: number
+          name: string
+          username: string
+          email: string
+          phone: string | null
+          website: string | null
+          address: Json | null
+          company: Json | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          name: string
+          username: string
+          email: string
+          phone?: string | null
+          website?: string | null
+          address?: Json | null
+          company?: Json | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          name?: string
+          username?: string
+          email?: string
+          phone?: string | null
+          website?: string | null
+          address?: Json | null
+          company?: Json | null
+          created_at?: string
+          updated_at?: string
         }
         Relationships: []
+      }
+      comments: {
+        Row: {
+          id: number
+          post_id: number
+          name: string
+          email: string
+          body: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          post_id: number
+          name: string
+          email: string
+          body: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          post_id?: number
+          name?: string
+          email?: string
+          body?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      albums: {
+        Row: {
+          id: number
+          user_id: number
+          title: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          user_id: number
+          title: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          user_id?: number
+          title?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "albums_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      photos: {
+        Row: {
+          id: number
+          album_id: number
+          title: string
+          url: string
+          thumbnail_url: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          album_id: number
+          title: string
+          url: string
+          thumbnail_url: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          album_id?: number
+          title?: string
+          url?: string
+          thumbnail_url?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "photos_album_id_fkey"
+            columns: ["album_id"]
+            isOneToOne: false
+            referencedRelation: "albums"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      todos: {
+        Row: {
+          id: number
+          user_id: number
+          title: string
+          completed: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          user_id: number
+          title: string
+          completed?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          user_id?: number
+          title?: string
+          completed?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "todos_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {
@@ -98,23 +282,27 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -123,23 +311,27 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -147,20 +339,32 @@ export type TablesUpdate<
     : never
 
 export type Enums<
-  DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
+  PublicEnumNameOrOptions extends
+    | keyof (DefaultSchema["Enums"] & DefaultSchema["CompositeTypes"])
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends PublicEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof (DatabaseWithoutInternals[PublicEnumNameOrOptions["schema"]]["Enums"] &
+        DatabaseWithoutInternals[PublicEnumNameOrOptions["schema"]]["CompositeTypes"])
     : never = never,
-> = DefaultSchemaEnumNameOrOptions extends {
+> = PublicEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+  ? (DatabaseWithoutInternals[PublicEnumNameOrOptions["schema"]]["Enums"] &
+      DatabaseWithoutInternals[PublicEnumNameOrOptions["schema"]]["CompositeTypes"])[EnumName] extends {
+      Values: infer V
+    }
+    ? V
+    : never
+  : PublicEnumNameOrOptions extends keyof (DefaultSchema["Enums"] &
+        DefaultSchema["CompositeTypes"])
+    ? (DefaultSchema["Enums"] &
+        DefaultSchema["CompositeTypes"])[PublicEnumNameOrOptions] extends {
+        Values: infer V
+      }
+      ? V
+      : never
     : never
 
 export type CompositeTypes<
